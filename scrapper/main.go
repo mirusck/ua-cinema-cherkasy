@@ -15,12 +15,13 @@ type Movie struct {
 	Title 		string
 	URL 		string
 	FoundAt 	*time.Time
+	Sent		bool
 }
 
 /*
  * Open home page, parse all movies that are on show now and run their concurrent country checks
  */
-func Handler() (error) {
+func Handler() error {
 	// Request the HTML page.
 	res, err := http.Get(os.Getenv("CINEMA_URL"))
 	if err != nil {
@@ -48,6 +49,7 @@ func Handler() (error) {
 		if exists {
 			movie := Movie{ URL: url }
 			movie.Title = s.Find(".views-field-title a").Text()
+			// TODO add cover image url
 
 			go func(movie Movie) {
 				fmt.Printf("Scrapping: %s - %s\n", movie.URL, movie.Title)
